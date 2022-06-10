@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const BlogPost = require("./models/BlogPost.js");
 
 mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
   useNewUrlParser: true,
@@ -13,9 +14,12 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.get("/", (req, res) => {
-  //res.sendFile(path.resolve(__dirname, "pages/index.html"));
-  res.render("index");
+app.get("/", async (req, res) => {
+  const blogposts = await BlogPost.find({});
+  res.render("index", {
+    blogposts,
+  });
+  console.log(blogposts);
 });
 app.get("/about", (req, res) => {
   //res.sendFile(path.resolve(__dirname, "pages/index.html"));
@@ -32,10 +36,11 @@ app.get("/post", (req, res) => {
 app.get("/posts/new", (req, res) => {
   res.render("create");
 });
-app.post("/posts/store", (req, res) => {
-  console.log(req.body);
+app.post("/posts/store", async (req, res) => {
+  await BlogPost.create(req.body);
   res.redirect("/");
 });
+
 app.listen(4000, () => {
   console.log("App listening on port 4000");
 });
