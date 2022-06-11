@@ -11,11 +11,18 @@ mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
 
 const app = new express();
 const ejs = require("ejs");
+const validateMiddleWare = (req, res, next) => {
+  if (req.files == null || req.body.title == null || req.body.title == null) {
+    return res.redirect('/posts/new')
+  }
+  next()
+}
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
+app.use('/posts/store', validateMiddleWare)
 app.get("/", async (req, res) => {
   const blogposts = await BlogPost.find({});
   res.render("index", {
