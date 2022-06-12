@@ -9,7 +9,10 @@ const homeController = require('./controllers/home')
 const storePostController = require('./controllers/storePost')
 const getPostController = require('./controllers/getPost')
 const validateMiddleware = require("./middleware/validationMiddleware");
-
+const newUserController = require('./controllers/newUser')
+const storeUserController = require('./controllers/storeUser')
+const loginController = require('./controllers/login')
+const loginUserController = require('./controllers/loginUser')
 
 mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
   useNewUrlParser: true,
@@ -50,11 +53,13 @@ app.get("/contact", (req, res) => {
     blogpost,
   });
 }); */
-app.get('/',homeController) 
-app.get('/post/:id',getPostController) 
+app.get('/', homeController)
+app.get('/post/:id', getPostController)
 app.post('/posts/store', storePostController)
-
+app.get('/auth/register', newUserController)
 app.get('/posts/new', newPostController)
+app.get('/auth/login', loginController);
+app.post('/users/login',loginUserController)
 app.post("/posts/store", (req, res) => {
   let image = req.files.image;
   image.mv(
@@ -68,6 +73,7 @@ app.post("/posts/store", (req, res) => {
     }
   );
 });
+app.post('/users/register', storeUserController)
 app.listen(4000, () => {
   console.log("App listening on port 4000");
 });
