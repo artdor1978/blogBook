@@ -1,9 +1,15 @@
 const express = require("express");
-const path = require("path");
+//const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const BlogPost = require("./models/BlogPost.js");
+//const BlogPost = require("./models/BlogPost.js");
 const fileUpload = require("express-fileupload");
+const newPostController = require('./controllers/newPost')
+const homeController = require('./controllers/home')
+const storePostController = require('./controllers/storePost')
+const getPostController = require('./controllers/getPost')
+const validateMiddleware = require("./middleware/validationMiddleware");
+
 
 mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
   useNewUrlParser: true,
@@ -11,42 +17,44 @@ mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
 
 const app = new express();
 const ejs = require("ejs");
-const validateMiddleWare = (req, res, next) => {
+/* const validateMiddleWare = (req, res, next) => {
   if (req.files == null || req.body.title == null || req.body.title == null) {
     return res.redirect('/posts/new')
   }
   next()
-}
+} */
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use('/posts/store', validateMiddleWare)
-app.get("/", async (req, res) => {
+app.use('/posts/store', validateMiddleware)
+/* app.get("/", async (req, res) => {
   const blogposts = await BlogPost.find({});
   res.render("index", {
     blogposts,
   });
   console.log(blogposts);
-});
-app.get("/about", (req, res) => {
+}); */
+/* app.get("/about", (req, res) => {
   //res.sendFile(path.resolve(__dirname, "pages/index.html"));
   res.render("about");
 });
 app.get("/contact", (req, res) => {
   //res.sendFile(path.resolve(__dirname, "pages/contact.html"));
   res.render("contact");
-});
-app.get("/post/:id", async (req, res) => {
+}); */
+/* app.get("/post/:id", async (req, res) => {
   const blogpost = await BlogPost.findById(req.params.id);
   res.render("post", {
     blogpost,
   });
-});
-app.get("/posts/new", (req, res) => {
-  res.render("create");
-});
+}); */
+app.get('/',homeController) 
+app.get('/post/:id',getPostController) 
+app.post('/posts/store', storePostController)
+
+app.get('/posts/new', newPostController)
 app.post("/posts/store", (req, res) => {
   let image = req.files.image;
   image.mv(
