@@ -13,6 +13,7 @@ const newUserController = require('./controllers/newUser')
 const storeUserController = require('./controllers/storeUser')
 const loginController = require('./controllers/login')
 const loginUserController = require('./controllers/loginUser')
+const expressSession = require('express-session');
 
 mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
   useNewUrlParser: true,
@@ -32,6 +33,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use('/posts/store', validateMiddleware)
+app.use(expressSession({
+  secret: 'keyboard cat'
+}))
+
 /* app.get("/", async (req, res) => {
   const blogposts = await BlogPost.find({});
   res.render("index", {
@@ -59,8 +64,8 @@ app.post('/posts/store', storePostController)
 app.get('/auth/register', newUserController)
 app.get('/posts/new', newPostController)
 app.get('/auth/login', loginController);
-app.post('/users/login',loginUserController)
-app.post("/posts/store", (req, res) => {
+app.post('/users/login', loginUserController)
+/* app.post("/posts/store", (req, res) => {
   let image = req.files.image;
   image.mv(
     path.resolve(__dirname, "public/assets/img", image.name),
@@ -72,7 +77,7 @@ app.post("/posts/store", (req, res) => {
       res.redirect("/");
     }
   );
-});
+}); */
 app.post('/users/register', storeUserController)
 app.listen(4000, () => {
   console.log("App listening on port 4000");
