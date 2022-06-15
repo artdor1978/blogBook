@@ -17,6 +17,7 @@ const expressSession = require("express-session");
 const authMiddleware = require("./middleware/authMiddleware");
 const redirectIfAuthenticatedMiddleware = require("./middleware/redirectIfAuthenticatedMiddleware");
 const logoutController = require("./controllers/logout");
+const flash = require("connect-flash");
 
 mongoose.connect("mongodb://127.0.0.1:27017/my_database", {
   useNewUrlParser: true,
@@ -31,6 +32,7 @@ const ejs = require("ejs");
   next()
 } */
 app.set("view engine", "ejs");
+app.use(flash());
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
