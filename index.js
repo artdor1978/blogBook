@@ -32,7 +32,6 @@ const ejs = require("ejs");
   next()
 } */
 app.set("view engine", "ejs");
-app.use(flash());
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,6 +47,7 @@ app.use("*", (req, res, next) => {
   loggedIn = req.session.userId;
   next();
 });
+app.use(flash());
 /* app.get("/", async (req, res) => {
   const blogposts = await BlogPost.find({});
   res.render("index", {

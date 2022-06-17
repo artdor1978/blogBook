@@ -1,5 +1,6 @@
 const User = require("../models/User.js");
 const path = require("path");
+const flash = require("connect-flash");
 module.exports = (req, res) => {
   User.create(req.body, (error, user) => {
     if (error) {

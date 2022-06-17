@@ -1,3 +1,4 @@
+const flash = require("connect-flash");
 module.exports = (req, res) => {
   var username = "";
   var password = "";
